@@ -9,6 +9,7 @@ import { processAuditJson, handleUnusedExceptions } from '../utils/vulnerability
  * @param  {Array} exceptionIds       List of vulnerability IDs to exclude
  * @param  {Array} exceptionModules   List of vulnerable modules to ignore in audit results
  * @param  {Array} columnsToInclude   List of columns to include in audit results
+ * @param  {String} filterLevel       Optional level to filter table display
  */
 export default function handleFinish(
   jsonBuffer: string,
@@ -16,6 +17,7 @@ export default function handleFinish(
   exceptionIds: string[],
   exceptionModules: string[],
   columnsToInclude: string[],
+  filterLevel?: AuditLevel,
 ): void {
   const { unhandledIds, report, failed, unusedExceptionIds, unusedExceptionModules } = processAuditJson(
     jsonBuffer,
@@ -23,6 +25,7 @@ export default function handleFinish(
     exceptionIds,
     exceptionModules,
     columnsToInclude,
+    filterLevel,
   );
 
   // If unable to process the audit JSON

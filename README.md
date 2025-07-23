@@ -82,6 +82,23 @@ Now you can run locally or in your CI pipeline:
 npm run audit
 ```
 
+### Filter vulnerability table
+
+You can filter the vulnerability table to show only vulnerabilities at or above a specified severity level using the `--filter-table` flag. This is useful for reducing noise in the output while maintaining the original audit behavior for exit codes.
+
+```bash
+# Filter table to show only high and critical vulnerabilities
+better-npm-audit audit --filter-table high
+
+# Filter table to match the audit level
+better-npm-audit audit --level moderate --filter-table
+
+# Set different levels for exit behavior vs table display
+better-npm-audit audit --level high --filter-table moderate
+```
+
+**Note:** The `--filter-table` flag only affects what vulnerabilities are displayed in the table. The audit level (`--level`) still controls the exit behavior and vulnerability counting.
+
 <br />
 
 ## Options
@@ -91,6 +108,7 @@ npm run audit
 | `--exclude`         | `-x`  | Exceptions or the vulnerabilities ID(s) to exclude; the ID can be the numeric ID, CVE, CWE or GHSA ID |
 | `--module-ignore`   | `-m`  | Names of modules to exclude                                                                           |
 | `--level`           | `-l`  | The minimum audit level to validate; Same as the original `--audit-level` flag                        |
+| `--filter-table`    | `-f`  | Filter the vulnerability table to show only vulnerabilities at or above the specified level. Accepts a level (`info`, `low`, `moderate`, `high`, `critical`) or can be used as a boolean flag to filter by the audit level |
 | `--production`      | `-p`  | Skip the `devDependencies`                                                                            |
 | `--registry`        | `-r`  | The npm registry url to use                                                                           |
 | `--include-columns` | `-i`  | Columns to include in report                                                                          |
