@@ -24,7 +24,7 @@ function getProductionOnlyOption() {
  */
 export default function handleInput(
   options: CommandOptions,
-  fn: (T1: string, T2: AuditLevel, T3: string[], T4: string[], T5: string[]) => void,
+  fn: (T1: string, T2: AuditLevel, T3: string[], T4: string[], T5: string[], T6?: AuditLevel) => void,
 ): void {
   // Generate NPM Audit command
   const auditCommand: string = [
@@ -40,6 +40,19 @@ export default function handleInput(
   const envVar = process.env.NPM_CONFIG_AUDIT_LEVEL as AuditLevel;
   const auditLevel: AuditLevel = get(options, 'level', envVar) || 'info';
 
+  // Process filter table option
+  let filterLevel: AuditLevel | undefined;
+  const filterTableOption = get(options, 'filterTable');
+  if (filterTableOption) {
+    if (typeof filterTableOption === 'string') {
+      // User provided a specific level for filtering
+      filterLevel = filterTableOption as AuditLevel;
+    } else {
+      // User provided true flag, use the audit level
+      filterLevel = auditLevel;
+    }
+  }
+
   // Get the exceptions
   const nsprc = readFile('.nsprc');
   const cmdExceptions: string[] = get(options, 'exclude', '')
@@ -53,5 +66,5 @@ export default function handleInput(
     .map((each: string) => each.trim())
     .filter((each: string) => !!each);
 
-  fn(auditCommand, auditLevel, exceptionIds, cmdModuleIgnore, cmdIncludeColumns);
+  fn(auditCommand, auditLevel, exceptionIds, cmdModuleIgnore, cmdIncludeColumns, filterLevel);
 }
